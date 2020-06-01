@@ -2,7 +2,7 @@
 
 **Mubeen:**
 
-- Fibonacci Series using Shared Memory
+- Fibonacci Series using Shared Memory DONE
 - Fibonacci Series using Pipes DONE
 
 **Jaafar:**
