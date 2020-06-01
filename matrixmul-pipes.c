@@ -1,5 +1,6 @@
 #include<unistd.h>
 #include<stdio.h>
+#include<stdlib.h>
 #include<sys/stat.h>
 #define P(X) for(l=0;l<2;l++){\
                  for(m=0;m<2;m++)\
@@ -9,49 +10,53 @@
                  for(m=0;m<2;m++)\
                         scanf("%d",&X[l][m]);}\
 
-int main()
+void main()
 {
-    int l,m,n;
-    int pid;
-    int p1[2],p2[2];
-    pipe(p1);
-    pipe(p2);
+    int fd1[2], fd2[2];
+    pipe(fd1);
+    pipe(fd2);
+    int pid = fork();
+    if(!pid){
+        int mat1[2][2] = {{1, 2}, {3, 4}};
+        int mat2[2][2] = {{4, 3}, {2, 1}};
 
-            if((pid=fork())==0)
-                   {
-              
-                           int mat1[2][2]={1,2,3,4};
-                           int mat2[2][2]={{1,2},{2,3}};
-                            P(mat1);
-                         P(mat2);
-                 
-                           int ans[2][2];
-    
-                           write(p1[1],mat1,2*2*sizeof(int));
-                           write(p2[1],mat2,2*2*sizeof(int));
-       
-       
-                           read(p1[0],ans,2*2*sizeof(int));
-                           P(ans);
-            
-                   }
-                else
-                   {
-                           int mul[2][2]={0},m1[2][2],m2[2][2],i,j,k;
- 
-                           read(p1[0],m1,2*2*sizeof(int));
-                           read(p2[0],m2,2*2*sizeof(int));
-                           P(m1);
-                           P(m2);
-                           for(i=0;i<2;i++)
-                                 for(j=0;j<2;j++)
-                                          for(k=0;k<2;k++)
-                                              mul[i][j]+=m1[i][k]*m2[k][j];
-           
-                           P(mul);
-                           write(p1[1],mul,2*2*sizeof(int));
-             
-            
-                    }
-return 0;
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                printf("%d ", mat1[i][j]);
+            }
+            printf("\n");
+        }
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                printf("%d ", mat2[i][j]);
+            }
+            printf("\n");
+        }
+        write(fd1[1], mat1, sizeof(int) *2 *2);
+        write(fd2[1], mat2, sizeof(int) *2 *2);
+        
+        int result[2][2];
+        read(fd1[0], result, sizeof(int) *2 *2);
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                printf("%d ", result[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    else{
+        int matrix1[2][2], matrix2[2][2];
+        read(fd1[0], matrix1, sizeof(int) *2 *2);
+        read(fd2[0], matrix2, sizeof(int) *2 *2);
+
+        int cal[2][2] = {0};
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 2; j++){
+                for(int k = 0; k < 2; k++){
+                    cal[i][j] += (matrix1[i][k] * matrix2[k][j]);
+                }
+            }
+        }
+        write(fd1[1], cal, sizeof(int) *2 *2);
+    }
 }
