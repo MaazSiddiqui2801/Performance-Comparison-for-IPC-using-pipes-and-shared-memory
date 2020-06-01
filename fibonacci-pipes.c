@@ -13,7 +13,7 @@ void main()
     int limit, ar[30], buffer[30];
     int prev, curr;
     int pid= fork();
-    if(pid == 0){
+    if(!pid){
         close(fd1[0]);
         write(fd1[1], &n, 4);
         close(fd2[1]);
