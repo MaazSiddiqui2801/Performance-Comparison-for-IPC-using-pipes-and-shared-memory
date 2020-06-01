@@ -8,12 +8,12 @@
 **Jaafar:**
 
 - Matrix addition using Shared Memory
-- Matrix addition using Pipes
+- Matrix addition using Pipes DONE
 
 **Anas:**
 
 - Matrix multiplication using Shared Memory
-- Matrix multiplication using Pipes
+- Matrix multiplication using Pipes DONE
 
 **Final Report:**
 
