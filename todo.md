@@ -1,22 +1,21 @@
 # Todo Tasks:
 
-##Mubeen:
+**Mubeen:**
 
 Fibonacci Series using Shared Memory
 Fibonacci Series using Pipes
 
-##Jaafar:
+**Jaafar:**
 
 Matrix addition using Shared Memory
 Matrix addition using Pipes
 
-##Anas:
+**Anas:**
 
 Matrix multiplication using Shared Memory
 Matrix multiplication using Pipes
 
-
-##Final Report:
+**Final Report:**
 
 Objective, 
 Project description, 
