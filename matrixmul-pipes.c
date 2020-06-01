@@ -1,14 +1,7 @@
 #include<unistd.h>
 #include<stdio.h>
 #include<stdlib.h>
-#include<sys/stat.h>
-#define P(X) for(l=0;l<2;l++){\
-                 for(m=0;m<2;m++)\
-                        printf("%d ",X[l][m]); printf("\n");}\
-
-#define S(X) for(l=0;l<2;l++){\
-                 for(m=0;m<2;m++)\
-                        scanf("%d",&X[l][m]);}\
+#include<sys/wait.h>
 
 void main()
 {
@@ -16,16 +9,18 @@ void main()
     pipe(fd1);
     pipe(fd2);
     int pid = fork();
-    if(!pid){
+    if(pid == 0){
         int mat1[2][2] = {{1, 2}, {3, 4}};
         int mat2[2][2] = {{4, 3}, {2, 1}};
 
+        printf("Matrix1:\n");
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 2; j++){
                 printf("%d ", mat1[i][j]);
             }
             printf("\n");
         }
+        printf("Matrix2:\n");
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 2; j++){
                 printf("%d ", mat2[i][j]);
@@ -34,6 +29,8 @@ void main()
         }
         write(fd1[1], mat1, sizeof(int) *2 *2);
         write(fd2[1], mat2, sizeof(int) *2 *2);
+
+        sleep(1);
         
         int result[2][2];
         read(fd1[0], result, sizeof(int) *2 *2);
@@ -50,6 +47,7 @@ void main()
         read(fd2[0], matrix2, sizeof(int) *2 *2);
 
         int cal[2][2] = {0};
+        printf("\nCalculating answer\n\n");
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 2; j++){
                 for(int k = 0; k < 2; k++){
@@ -58,5 +56,7 @@ void main()
             }
         }
         write(fd1[1], cal, sizeof(int) *2 *2);
+        wait(NULL);
     }
+    return;
 }
