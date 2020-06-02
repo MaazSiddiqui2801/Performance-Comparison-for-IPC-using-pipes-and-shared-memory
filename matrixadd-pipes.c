@@ -71,6 +71,6 @@ int main()
         wait(NULL);
         pt = clock() - pt;
         double time_taken = (double)pt / CLOCKS_PER_SEC;
-        printf("\nParent process time: %f\n", time_taken);a
+        printf("\nParent process time: %f\n", time_taken);
     }
 }
