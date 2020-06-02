@@ -8,18 +8,8 @@
 # include <errno.h>
 # include<time.h>
 
-// So we could use other sizes without editing the source.
-#ifndef MAX_SEQUENCE
-# define MAX_SEQUENCE 10
-#endif
-
-// Check that MAX_SEQUENCE is large enough!
-#if MAX_SEQUENCE < 2
-#error MAX_SEQUENCE must be at least 2
-#endif
-
 typedef struct{
-    long fib_sequence[MAX_SEQUENCE];
+    long fib_sequence[10];
     int sequence_size;
 } shared_data;
 
@@ -32,23 +22,17 @@ int main()
 
     /* the identifier for the shared memory segment */
     int segment_id;
-
-    /* the size (in bytes) of the shared memory segment */
     size_t segment_size = sizeof(shared_data);
 
-    /* allocate  a shared memory segment */
     segment_id = shmget(IPC_PRIVATE, segment_size, S_IRUSR | S_IWUSR);
 
-    // Check result of shmget
     if (segment_id == -1) {
         perror("shmget failed");
         return EXIT_FAILURE;
     }
 
-    /* attach the shared memory segment */
     shared_data *shared_memory = shmat(segment_id, NULL, 0);
 
-    // Check whether attaching succeeded
     if ((void*)shared_memory == (void*)-1) {
         perror("shmat failed");
         goto destroy; // clean up
@@ -88,13 +72,11 @@ int main()
         printf("\nParent process time: %f\n", time_taken);
     }
 
-    /* now detach the shared memory segment */ 
     if (shmdt(shared_memory) == -1) {
         fprintf(stderr, "Unable to detach\n");
     }
-
+    
     destroy:
-    /* now remove the shared memory segment */
     shmctl(segment_id, IPC_RMID, NULL); 
 
     return 0;
