@@ -2,6 +2,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<sys/wait.h>
+#include<time.h>
 
 void main()
 {
@@ -10,6 +11,7 @@ void main()
     pipe(fd2);
     int pid = fork();
     if(pid == 0){
+        clock_t ct = clock();
         int mat1[2][2] = {{1, 2}, {3, 4}};
         int mat2[2][2] = {{4, 3}, {2, 1}};
 
@@ -40,8 +42,12 @@ void main()
             }
             printf("\n");
         }
+        ct = clock() - ct;
+        double time_taken = (double)ct / CLOCKS_PER_SEC;
+        printf("\nChild process time: %f\n", time_taken);
     }
     else{
+        clock_t pt = clock();
         int matrix1[2][2], matrix2[2][2];
         read(fd1[0], matrix1, sizeof(int) *2 *2);
         read(fd2[0], matrix2, sizeof(int) *2 *2);
@@ -57,6 +63,9 @@ void main()
         }
         write(fd1[1], cal, sizeof(int) *2 *2);
         wait(NULL);
+        pt = clock() - pt;
+        double time_taken = (double)pt / CLOCKS_PER_SEC;
+        printf("\nParent process time: %f\n", time_taken);
     }
     return;
 }
