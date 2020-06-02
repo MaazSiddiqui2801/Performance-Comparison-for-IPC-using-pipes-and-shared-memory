@@ -4,12 +4,12 @@
 #include <sys/types.h>
 #include <sys/shm.h>
 #include <sys/wait.h>
+#include <time.h>
 #define shmmode (SHM_R | SHM_W)
 #define shmkey (key_t)31
 
 int main()
 {
-
     int shmid1, shmid2, pid, status;
     int *shmadd, *shmdata;
     int mtx1[2][2] = {{1, 2}, {3, 4}};
@@ -30,21 +30,31 @@ int main()
         printf("\nmatrices cannot multiply\n");
         return 0;
     }
+    clock_t pt = clock();
     for (i = 0; i < row1 / 2; i++)
+    {
         for (j = 0; j < col1; j++, shmadd += sizeof(int))
         {
             *shmadd = 0;
-                *shmadd += (mtx1[i][j] + mtx2[i][j]);
+            *shmadd += (mtx1[i][j] + mtx2[i][j]);
         }
+    }
+    pt = clock() - pt;
+    double time_taken = (double)pt / CLOCKS_PER_SEC;
+    printf("\nParent process time: %f\n", time_taken);
     pid = fork();
     if (pid == 0)
     {
+        clock_t ct = clock();
         for (i = row1 / 2; i < row1; i++)
             for (j = 0; j < col2; j++, shmadd += sizeof(int))
             {
                 *shmadd = 0;
-                    *shmadd += (mtx1[i][j] + mtx2[i][j]);
+                *shmadd += (mtx1[i][j] + mtx2[i][j]);
             }
+        ct = clock() - ct;
+        double time_taken = (double)ct / CLOCKS_PER_SEC;
+        printf("\nParent process time: %f\n", time_taken);
     }
     while ((pid = wait(&status)) != -1)
         ;
@@ -52,15 +62,14 @@ int main()
     printf("\nResult from pocess id number %d\n", getpid());
     for (i = 0; i < row1; ++i)
     {
-        printf("\n     ");
-
         for (j = 0; j < col2; j++, shmadd += sizeof(int))
             printf("%d ", *shmadd);
+        printf("\n");
     }
     struct shmd_ds *shmidds;
     shmdt((void *)shmadd); //detaching
 
     shmctl(shmid1, IPC_RMID, shmidds); //destroy the segment
 
-    return 1;
+    return 0;
 }
