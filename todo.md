@@ -7,15 +7,15 @@
 
 **Jaafar:**
 
-- Matrix addition using Shared Memory
+- Matrix addition using Shared Memory DONE
 - Matrix addition using Pipes DONE
 
 **Anas:**
 
-- Matrix multiplication using Shared Memory
+- Matrix multiplication using Shared Memory DONE
 - Matrix multiplication using Pipes DONE
 
-**Final Report:**
+**Final Report:** DONE
 
 - Objective, 
 - Project description, 
