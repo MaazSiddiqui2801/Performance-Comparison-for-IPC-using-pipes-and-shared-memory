@@ -56,7 +56,7 @@ int main()
             }
         ct = clock() - ct;
         double time_taken = (double)ct / CLOCKS_PER_SEC;
-        printf("\nParent process time: %f\n", time_taken);
+        printf("\nChild process time: %f\n", time_taken);
     }
     while ((pid = wait(&status)) != -1)
         ;
