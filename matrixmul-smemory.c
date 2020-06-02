@@ -31,7 +31,7 @@ int main()
         return 0;
     }
     clock_t pt = clock();
-    for (i = 0; i < row1 / 2; i++)
+    for (i = 0; i < row1; i++)
     {
         for (j = 0; j < col1; j++, shmadd += sizeof(int))
         {
@@ -47,13 +47,14 @@ int main()
     if (pid == 0)
     {
         clock_t ct = clock();
-        for (i = 0; i < row1 / 2; i++)
+        for (i = 0; i < row1; i++){
             for (j = 0; j < col1; j++, shmadd += sizeof(int))
             {
                 *shmadd = 0;
                 for (int k = 0; k < col1; k++)
                     *shmadd += (mtx1[i][k] * mtx2[k][j]);
             }
+        }
         ct = clock() - ct;
         double time_taken = (double)ct / CLOCKS_PER_SEC;
         printf("\nChild process time: %f\n", time_taken);
