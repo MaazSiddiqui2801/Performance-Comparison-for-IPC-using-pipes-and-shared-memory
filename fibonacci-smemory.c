@@ -6,6 +6,7 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include<time.h>
 
 // So we could use other sizes without editing the source.
 #ifndef MAX_SEQUENCE
@@ -70,6 +71,7 @@ int main()
     pid_t pid;
     pid = fork();
     if (pid == 0){
+        clock_t ct = clock();
         printf("Child is producing the Fibonacci Sequence...\n");
         shared_memory->fib_sequence[0] = a;
         shared_memory->fib_sequence[1] = b;
@@ -79,9 +81,13 @@ int main()
             a = b;
             b = n;
         }
-        printf("\nChild ends\n"); 
+        printf("\nChild ends\n");
+        ct = clock() - ct;
+        double time_taken = (double)ct / CLOCKS_PER_SEC;
+        printf("\nChild process time: %f\n", time_taken);
     }
     else{
+        clock_t pt = clock();
         printf("Parent is waiting for child to complete...\n");
         wait(NULL);
         printf("Parent ends\n");
@@ -89,6 +95,9 @@ int main()
             printf("%ld ", shared_memory->fib_sequence[i]);
         }
         printf("\n");
+        pt = clock() - pt;
+        double time_taken = (double)pt / CLOCKS_PER_SEC;
+        printf("\nParent process time: %f\n", time_taken);
     }
 
     /* now detach the shared memory segment */ 

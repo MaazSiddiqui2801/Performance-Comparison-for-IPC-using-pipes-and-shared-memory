@@ -1,18 +1,20 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/wait.h>
+#include <time.h>
 
 int main()
 {
     int l, m, n;
     int pid;
     int p1[2], p2[2];
+    clock_t pt, ct;
     pipe(p1);
     pipe(p2);
 
     if ((pid = fork()) == 0)
     {
-
+        ct = clock();
         int mat1[2][2] = {{1, 2}, {3, 4}};
         int mat2[2][2] = {{4, 3}, {2, 1}};
         int ans[2][2];
@@ -47,9 +49,13 @@ int main()
 
         read(p1[0], ans, 2 * 2 * sizeof(int));
         printf("Added Matrix: \n%d %d \n%d %d \n", ans[0][0], ans[0][1], ans[1][0], ans[1][1]);
+        ct = clock() - ct;
+        double time_taken = (double)ct / CLOCKS_PER_SEC;
+        printf("\nChild process time: %f\n", time_taken);
     }
     else
     {
+        pt = clock();
         int mul[2][2] = {0}, m1[2][2], m2[2][2], i, j, k;
 
         read(p1[0], m1, 2 * 2 * sizeof(int));
@@ -63,6 +69,8 @@ int main()
         }
         write(p1[1], mul, 2 * 2 * sizeof(int));
         wait(NULL);
+        pt = clock() - pt;
+        double time_taken = (double)pt / CLOCKS_PER_SEC;
+        printf("\nParent process time: %f\n", time_taken);
     }
-    return 0;
 }
