@@ -25,22 +25,10 @@ typedef struct{
 
 int main()
 {
-    int a, b, m, n, i;
+    int a, b, m = 10, n, i;
     a = 0; b = 1;
     printf("Enter the number of a Fibonacci Sequence:\n");
     // Always check whether input conversion worked
-    if (scanf("%d", &m) != 1) {
-        printf("Invalid input, couldn't be converted.\n");
-        return EXIT_FAILURE;
-    }
-
-    if (m <= 0) {
-        printf("Please enter a positive integer\n");
-        return EXIT_FAILURE;  // exit if input is invalid
-    } else if (m > MAX_SEQUENCE) {
-        printf("Please enter an integer less than %d\n", MAX_SEQUENCE);
-        return EXIT_FAILURE;  // exit if input is invalid
-    }
 
     /* the identifier for the shared memory segment */
     int segment_id;
